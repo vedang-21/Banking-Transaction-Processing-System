@@ -34,6 +34,7 @@ void reverseLatestTransaction(void);
 void saveTransactionHistory(void);
 void loadTransactionHistory(void);
 void saveAccountRecords(void);
+void loadAccountRecords(void);
 
 /* Memory cleanup */
 void freeTransactionHistory(void);

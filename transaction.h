@@ -3,9 +3,9 @@
 
 #include "account.h"
 
-#define MAX_TRANSACTIONS 100
+#define MAX_QUEUE_TRANSACTIONS 100
 
-struct Transaction
+struct QueueTransaction
 {
     int transactionId;
     char type[20];

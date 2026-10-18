@@ -351,6 +351,75 @@ void saveAccountRecords(void)
     fclose(fp);
 }
 
+/* Load saved account records */
+void loadAccountRecords(void)
+{
+    FILE *fp = fopen("accounts.txt", "r");
+
+    if (fp == NULL)
+    {
+        /* File does not exist on the first run */
+        return;
+    }
+
+    char line[160];
+
+    while (fgets(line, sizeof(line), fp) != NULL)
+    {
+        int accountNumber;
+        char name[50];
+        float balance;
+
+        int fields = sscanf(
+            line,
+            "%d,%49[^,],%f",
+            &accountNumber,
+            name,
+            &balance
+        );
+
+        if (fields != 3 || accountNumber <= 0 || balance < 0)
+        {
+            continue;
+        }
+
+        /* Prevent duplicate accounts if already loaded or created */
+        if (findAccount(accountNumber) != NULL)
+        {
+            continue;
+        }
+
+        struct Account *newAccount = malloc(sizeof(struct Account));
+
+        if (newAccount == NULL)
+        {
+            printf("Memory allocation failed while loading accounts.\n");
+            break;
+        }
+
+        newAccount->accountNumber = accountNumber;
+        strcpy(newAccount->name, name);
+        newAccount->balance = balance;
+        newAccount->next = NULL;
+
+        if (head == NULL)
+        {
+            head = newAccount;
+        }
+        else
+        {
+            struct Account *temp = head;
+            while (temp->next != NULL)
+            {
+                temp = temp->next;
+            }
+            temp->next = newAccount;
+        }
+    }
+
+    fclose(fp);
+}
+
 /* Free allocated transaction nodes */
 void freeTransactionHistory(void)
 {

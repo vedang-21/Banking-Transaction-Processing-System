@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "account.h"
+#include "transaction_history.h"
 
 struct Account *head = NULL;
 
@@ -114,6 +115,7 @@ void createAccount()
         temp->next = newAccount;
     }
     printf("\nAccount created successfully!\n");
+    saveAccountRecords();
 }
 
 void displayAccounts()
@@ -203,6 +205,7 @@ void updateAccount()
     strcpy(account->name, newName);
     account->balance = newBalance;
     printf("\nAccount updated successfully!\n");
+    saveAccountRecords();
 }
 
 void deleteAccount()
@@ -244,6 +247,7 @@ void deleteAccount()
     }
     free(temp);
     printf("\nAccount deleted successfully!\n");
+    saveAccountRecords();
 }
 
 void swapAccountData(struct Account *first, struct Account *second)

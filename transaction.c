@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <string.h>
 #include "transaction.h"
+#include "transaction_history.h"
 
-struct Transaction queue[MAX_TRANSACTIONS];
+struct QueueTransaction queue[MAX_QUEUE_TRANSACTIONS];
 int front = -1;
 int rear = -1;
 int transactionCounter = 1;
@@ -14,7 +15,7 @@ int isQueueEmpty()
 
 int isQueueFull()
 {
-    return rear == MAX_TRANSACTIONS - 1;
+    return rear == MAX_QUEUE_TRANSACTIONS - 1;
 }
 
 void enqueue(char type[], int accountNumber, int receiverAccountNumber, float amount)
@@ -137,6 +138,8 @@ void deposit()
     account->balance = account->balance + amount;
     printf("\nDeposit successful! Updated Balance: %.2f\n", account->balance);
     enqueue("Deposit", account->accountNumber, 0, amount);
+    recordTransaction(account->accountNumber, "Deposit", amount);
+    saveAccountRecords();
 }
 
 void withdraw()
@@ -168,6 +171,8 @@ void withdraw()
     account->balance = account->balance - amount;
     printf("\nWithdrawal successful! Updated Balance: %.2f\n", account->balance);
     enqueue("Withdrawal", account->accountNumber, 0, amount);
+    recordTransaction(account->accountNumber, "Withdrawal", amount);
+    saveAccountRecords();
 }
 
 void transfer()
@@ -213,4 +218,6 @@ void transfer()
     printf("Sender Balance   : %.2f\n", sender->balance);
     printf("Receiver Balance : %.2f\n", receiver->balance);
     enqueue("Transfer", sender->accountNumber, receiver->accountNumber, amount);
+    recordTransaction(sender->accountNumber, "Transfer", amount);
+    saveAccountRecords();
 }
